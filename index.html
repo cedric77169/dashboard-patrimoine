@@ -2,214 +2,121 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Dashboard Patrimoine (Dark/Light)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>Dashboard Patrimoine Complet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    :root {
-      --bg: #f8fafc;
-      --fg: #1f2937;
-      --card: white;
-    }
-    body.dark {
-      --bg: #0f172a;
-      --fg: #f8fafc;
-      --card: #1e293b;
-    }
     body {
+      font-family: 'Arial', sans-serif;
       margin: 0;
-      background: var(--bg);
-      color: var(--fg);
-      font-family: 'Inter', sans-serif;
-      transition: background 0.3s, color 0.3s;
+      background: #0f172a;
+      color: #f8fafc;
     }
     header {
-      padding: 1.5em;
+      background: #1e293b;
+      padding: 1em;
       text-align: center;
       font-size: 1.5em;
-      font-weight: 600;
-      background: var(--card);
-      position: relative;
-    }
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 1em;
-      background: var(--card);
-      padding: 1em;
-    }
-    nav button {
-      padding: 0.5em 1em;
-      background: none;
-      border: 1px solid var(--fg);
-      color: var(--fg);
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    nav button.active {
-      background: var(--fg);
-      color: var(--bg);
+      font-weight: bold;
     }
     main {
-      max-width: 1000px;
+      max-width: 1200px;
       margin: auto;
       padding: 2em;
     }
-    .section { display: none; }
-    .section.active { display: block; }
-    .card {
-      background: var(--card);
-      padding: 2em;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    .section {
+      background: #1e293b;
+      padding: 1.5em;
+      border-radius: 8px;
       margin-bottom: 2em;
     }
-    canvas { max-width: 100%; }
-    .theme-toggle {
-      position: absolute;
-      right: 1em;
-      top: 1.2em;
-      font-size: 1em;
-      padding: 0.5em 1em;
-      background: #3b82f6;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    form input[type="number"] {
-      padding: 0.5em;
-      margin: 0.3em 0;
-      width: 100%;
-      box-sizing: border-box;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    form button {
-      margin-top: 1em;
-      padding: 0.6em 1.2em;
-      background: #10b981;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
+    h2 {
+      margin-top: 0;
+      color: #93c5fd;
     }
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 1em;
+      background: #f8fafc;
+      color: #0f172a;
     }
-    table th, table td {
-      border: 1px solid var(--fg);
+    th, td {
+      border: 1px solid #0f172a;
       padding: 0.5em;
       text-align: left;
     }
-    table th {
-      background: var(--bg);
+    th {
+      background: #e2e8f0;
+    }
+    td[contenteditable] {
+      background-color: #fff;
     }
   </style>
 </head>
-<body class="dark">
-  <header>
-    Mon Dashboard Patrimonial
-    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
-  </header>
-  <nav>
-    <button class="active" onclick="switchTab('global', this)">Vue Globale</button>
-    <button onclick="switchTab('investissements', this)">Investissements</button>
-    <button onclick="switchTab('formulaire', this)">Saisie</button>
-    <button onclick="switchTab('tableaux', this)">Tableaux</button>
-  </nav>
+<body>
+  <header>📊 Dashboard Patrimonial Complet</header>
   <main>
-    <div id="global" class="section active">
-      <div class="card">
-        <h2>Patrimoine Net Mensuel</h2>
-        <canvas id="chartPatrimoine"></canvas>
-      </div>
-      <div class="card">
-        <h2>Loyers mensuels</h2>
-        <canvas id="chartLoyers"></canvas>
-      </div>
+    <div class="section">
+      <h2>Évolution mensuelle du patrimoine</h2>
+      <table contenteditable="true">
+        <thead>
+          <tr>
+            <th>Mois</th>
+            <th>Assurance-vie (€)</th>
+            <th>Actions (€)</th>
+            <th>Cryptomonnaies (€)</th>
+            <th>Immobilier locatif (€)</th>
+            <th>Résidence principale (€)</th>
+            <th>Crédits immo restants (€)</th>
+            <th>Patrimoine brut (€)</th>
+            <th>Total dettes (€)</th>
+            <th>Patrimoine net (€)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Janvier</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>Février</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>Mars</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>Avril</td><td>1000</td><td>0</td><td>0</td><td>255000</td><td>5000</td><td>255000</td><td>261000</td><td>255000</td><td>6000</td></tr>
+          <tr><td>Mai</td><td>2000</td><td>0</td><td>0</td><td>255000</td><td>0</td><td>255000</td><td>257000</td><td>255000</td><td>2000</td></tr>
+          <tr><td>Juin</td><td>3000</td><td>0</td><td>0</td><td>255000</td><td>0</td><td>255000</td><td>258000</td><td>255000</td><td>3000</td></tr>
+          <tr><td>Juillet</td><td>0</td><td>0</td><td>0</td><td>255000</td><td>0</td><td>255000</td><td>255000</td><td>255000</td><td>0</td></tr>
+          <tr><td>Août</td><td>0</td><td>0</td><td>0</td><td>255000</td><td>0</td><td>255000</td><td>255000</td><td>255000</td><td>0</td></tr>
+          <tr><td>Septembre</td><td>0</td><td>0</td><td>0</td><td>255000</td><td>0</td><td>255000</td><td>255000</td><td>255000</td><td>0</td></tr>
+          <tr><td>Octobre</td><td>0</td><td>0</td><td>0</td><td>255000</td><td>0</td><td>255000</td><td>255000</td><td>255000</td><td>0</td></tr>
+          <tr><td>Novembre</td><td>0</td><td>0</td><td>0</td><td>255000</td><td>0</td><td>255000</td><td>255000</td><td>255000</td><td>0</td></tr>
+          <tr><td>Décembre</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        </tbody>
+      </table>
     </div>
-    <div id="investissements" class="section">
-      <div class="card">
-        <h2>Répartition des Investissements</h2>
-        <canvas id="chartInvest"></canvas>
-      </div>
+
+    <div class="section">
+      <h2>Tableau des crédits</h2>
+      <table contenteditable="true">
+        <thead>
+          <tr><th>Nom du crédit</th><th>Montant restant (€)</th><th>Taux d’intérêt (%)</th><th>Mensualité (€)</th><th>Échéance (mois)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Crédit Immo Résidence</td><td>50000</td><td></td><td></td><td>60</td></tr>
+          <tr><td>Crédit Immo Locatif</td><td>255000</td><td></td><td>1800</td><td>204</td></tr>
+        </tbody>
+      </table>
     </div>
-    <div id="formulaire" class="section">
-      <div class="card">
-        <h2>Formulaire de saisie - Mois en cours</h2>
-        <form id="formData">
-          <label>Patrimoine net (€) :</label>
-          <input type="number" id="inputPatrimoine" required>
-          <label>Loyers perçus (€) :</label>
-          <input type="number" id="inputLoyers" required>
-          <label>Investissements - Crypto (€) :</label>
-          <input type="number" id="inputCrypto">
-          <label>Investissements - Actions (€) :</label>
-          <input type="number" id="inputActions">
-          <label>Investissements - PEA (€) :</label>
-          <input type="number" id="inputPEA">
-          <button type="submit">Mettre à jour les graphiques</button>
-        </form>
-      </div>
-    </div>
-    <div id="tableaux" class="section">
-      <div class="card">
-        <h2>Tableau des Investissements</h2>
-        <table contenteditable="true">
-          <thead>
-            <tr><th>Mois</th><th>Crypto</th><th>Actions</th><th>PEA</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Jan</td><td>1000</td><td>2000</td><td>3000</td></tr>
-            <tr><td>Fév</td><td>1100</td><td>1900</td><td>3100</td></tr>
-          </tbody>
-        </table>
-      </div>
+
+    <div class="section">
+      <h2>Analyse financière</h2>
+      <table contenteditable="true">
+        <thead>
+          <tr><th>Indicateur</th><th>Valeur (%)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Rendement locatif brut</td><td></td></tr>
+          <tr><td>Rendement locatif net estimé</td><td>0</td></tr>
+          <tr><td>Taux d’endettement estimé</td><td></td></tr>
+        </tbody>
+      </table>
     </div>
   </main>
-  <script>
-    const mois = ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Aoû", "Sep", "Oct", "Nov", "Déc"];
-    const patrimoineData = [20000, 21500, 22500, 23500, 25000, 26000, 27500, 28500, 29500, 30500, 32000, 33000];
-    const loyersData = Array(12).fill(750);
-    const patrimoineChart = new Chart(document.getElementById('chartPatrimoine'), {
-      type: 'line',
-      data: { labels: mois, datasets: [{ label: 'Patrimoine (€)', data: patrimoineData, borderColor: '#3b82f6', fill: false, tension: 0.4 }] }
-    });
-    const loyersChart = new Chart(document.getElementById('chartLoyers'), {
-      type: 'bar',
-      data: { labels: mois, datasets: [{ label: 'Loyers (€)', data: loyersData, backgroundColor: '#10b981' }] }
-    });
-    const investChart = new Chart(document.getElementById('chartInvest'), {
-      type: 'doughnut',
-      data: { labels: ["Crypto", "Actions", "PEA"], datasets: [{ label: 'Répartition', data: [0, 0, 0], backgroundColor: ['#f59e0b', '#6366f1', '#ec4899'] }] }
-    });
-    document.getElementById('formData').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const patrimoine = parseFloat(document.getElementById('inputPatrimoine').value);
-      const loyers = parseFloat(document.getElementById('inputLoyers').value);
-      const crypto = parseFloat(document.getElementById('inputCrypto').value) || 0;
-      const actions = parseFloat(document.getElementById('inputActions').value) || 0;
-      const pea = parseFloat(document.getElementById('inputPEA').value) || 0;
-      patrimoineData.push(patrimoine); patrimoineData.shift();
-      loyersData.push(loyers); loyersData.shift();
-      patrimoineChart.update(); loyersChart.update();
-      investChart.data.datasets[0].data = [crypto, actions, pea]; investChart.update();
-    });
-    function switchTab(id, btn) {
-      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    }
-    function toggleTheme() {
-      document.body.classList.toggle('dark');
-      document.getElementById('themeBtn').textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
-    }
-  </script>
 </body>
 </html>
