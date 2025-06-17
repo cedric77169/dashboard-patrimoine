@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <title>Dashboard Patrimoine Complet</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -52,11 +53,33 @@
     td[contenteditable] {
       background-color: #fff;
     }
+    canvas {
+      background-color: #fff;
+      border-radius: 8px;
+      margin-top: 1em;
+      max-width: 100%;
+    }
   </style>
 </head>
 <body>
   <header>📊 Dashboard Patrimonial Complet</header>
   <main>
+
+    <div class="section">
+      <h2>Évolution du patrimoine net</h2>
+      <canvas id="chartPatrimoine"></canvas>
+    </div>
+
+    <div class="section">
+      <h2>Loyers mensuels</h2>
+      <canvas id="chartLoyers"></canvas>
+    </div>
+
+    <div class="section">
+      <h2>Répartition des investissements</h2>
+      <canvas id="chartInvestissements"></canvas>
+    </div>
+
     <div class="section">
       <h2>Évolution mensuelle du patrimoine</h2>
       <table contenteditable="true">
@@ -74,7 +97,7 @@
             <th>Patrimoine net (€)</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="patrimoineTable">
           <tr><td>Janvier</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
           <tr><td>Février</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
           <tr><td>Mars</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
@@ -98,8 +121,8 @@
           <tr><th>Nom du crédit</th><th>Montant restant (€)</th><th>Taux d’intérêt (%)</th><th>Mensualité (€)</th><th>Échéance (mois)</th></tr>
         </thead>
         <tbody>
-          <tr><td>Crédit Immo Résidence</td><td>50000</td><td></td><td></td><td>60</td></tr>
-          <tr><td>Crédit Immo Locatif</td><td>255000</td><td></td><td>1800</td><td>204</td></tr>
+          <tr><td>Crédit Immo Résidence</td><td>50000</td><td>1.5</td><td></td><td>60</td></tr>
+          <tr><td>Crédit Immo Locatif</td><td>255000</td><td>2.2</td><td>1800</td><td>204</td></tr>
         </tbody>
       </table>
     </div>
@@ -118,5 +141,49 @@
       </table>
     </div>
   </main>
+
+  <script>
+    const patrimoineNetData = [0, 0, 0, 6000, 2000, 3000, 0, 0, 0, 0, 0, 0];
+    const loyersMensuelsData = Array(12).fill(750);
+    const repartitionData = [10000, 5000, 1500]; // Crypto, Actions, PEA
+
+    new Chart(document.getElementById('chartPatrimoine'), {
+      type: 'line',
+      data: {
+        labels: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"],
+        datasets: [{
+          label: 'Patrimoine net (€)',
+          data: patrimoineNetData,
+          borderColor: '#3b82f6',
+          backgroundColor: '#3b82f6',
+          tension: 0.3
+        }]
+      }
+    });
+
+    new Chart(document.getElementById('chartLoyers'), {
+      type: 'bar',
+      data: {
+        labels: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"],
+        datasets: [{
+          label: 'Loyers perçus (€)',
+          data: loyersMensuelsData,
+          backgroundColor: '#10b981'
+        }]
+      }
+    });
+
+    new Chart(document.getElementById('chartInvestissements'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Crypto', 'Actions', 'PEA'],
+        datasets: [{
+          label: 'Répartition',
+          data: repartitionData,
+          backgroundColor: ['#f59e0b', '#6366f1', '#ec4899']
+        }]
+      }
+    });
+  </script>
 </body>
 </html>
