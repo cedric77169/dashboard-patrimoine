@@ -1,136 +1,214 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tableau de bord patrimonial</title>
+  <meta charset="UTF-8">
+  <title>Dashboard Patrimoine (Dark/Light)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #f8fafc;
+      --fg: #1f2937;
+      --card: white;
+    }
+    body.dark {
+      --bg: #0f172a;
+      --fg: #f8fafc;
+      --card: #1e293b;
+    }
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      color: #333;
       margin: 0;
-      padding: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Inter', sans-serif;
+      transition: background 0.3s, color 0.3s;
     }
     header {
-      background: #2c3e50;
-      color: white;
-      padding: 1em;
+      padding: 1.5em;
       text-align: center;
+      font-size: 1.5em;
+      font-weight: 600;
+      background: var(--card);
+      position: relative;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 1em;
+      background: var(--card);
+      padding: 1em;
+    }
+    nav button {
+      padding: 0.5em 1em;
+      background: none;
+      border: 1px solid var(--fg);
+      color: var(--fg);
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    nav button.active {
+      background: var(--fg);
+      color: var(--bg);
     }
     main {
+      max-width: 1000px;
+      margin: auto;
       padding: 2em;
     }
-    .card, .form-section {
-      background: white;
-      border-radius: 8px;
-      padding: 1.5em;
+    .section { display: none; }
+    .section.active { display: block; }
+    .card {
+      background: var(--card);
+      padding: 2em;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       margin-bottom: 2em;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    canvas {
-      max-width: 100%;
-    }
-    input {
-      margin: 0.5em 0;
-      width: 95%;
-    }
-    button {
-      margin-top: 1em;
+    canvas { max-width: 100%; }
+    .theme-toggle {
+      position: absolute;
+      right: 1em;
+      top: 1.2em;
+      font-size: 1em;
       padding: 0.5em 1em;
-      font-weight: bold;
-      background: #27ae60;
+      background: #3b82f6;
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
+    }
+    form input[type="number"] {
+      padding: 0.5em;
+      margin: 0.3em 0;
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    form button {
+      margin-top: 1em;
+      padding: 0.6em 1.2em;
+      background: #10b981;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1em;
+    }
+    table th, table td {
+      border: 1px solid var(--fg);
+      padding: 0.5em;
+      text-align: left;
+    }
+    table th {
+      background: var(--bg);
     }
   </style>
 </head>
-<body>
+<body class="dark">
   <header>
-    <h1>Tableau de bord patrimonial</h1>
+    Mon Dashboard Patrimonial
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️</button>
   </header>
+  <nav>
+    <button class="active" onclick="switchTab('global', this)">Vue Globale</button>
+    <button onclick="switchTab('investissements', this)">Investissements</button>
+    <button onclick="switchTab('formulaire', this)">Saisie</button>
+    <button onclick="switchTab('tableaux', this)">Tableaux</button>
+  </nav>
   <main>
-    <div class="form-section">
-      <h2>Mettre à jour les données</h2>
-      <label>Patrimoine Net (€) mensuel :</label><br>
-      <input type="text" id="patrimoineInput" value="20000,21000,22000,23500,24500,25500,26000,27000,28500,29500,30000,31000"><br>
-      <label>Loyers mensuels (€) :</label><br>
-      <input type="text" id="loyersInput" value="750,750,750,750,750,750,750,750,750,750,750,750"><br>
-      <label>Répartition actifs (€) : assurance-vie, actions, crypto, RP, locatif</label><br>
-      <input type="text" id="repartitionInput" value="10000,5000,1500,120000,90000"><br>
-      <button onclick="updateCharts()">Mettre à jour les graphiques</button>
+    <div id="global" class="section active">
+      <div class="card">
+        <h2>Patrimoine Net Mensuel</h2>
+        <canvas id="chartPatrimoine"></canvas>
+      </div>
+      <div class="card">
+        <h2>Loyers mensuels</h2>
+        <canvas id="chartLoyers"></canvas>
+      </div>
     </div>
-
-    <div class="card">
-      <h2>Évolution du patrimoine net</h2>
-      <canvas id="patrimoineChart"></canvas>
+    <div id="investissements" class="section">
+      <div class="card">
+        <h2>Répartition des Investissements</h2>
+        <canvas id="chartInvest"></canvas>
+      </div>
     </div>
-    <div class="card">
-      <h2>Loyers mensuels</h2>
-      <canvas id="loyersChart"></canvas>
+    <div id="formulaire" class="section">
+      <div class="card">
+        <h2>Formulaire de saisie - Mois en cours</h2>
+        <form id="formData">
+          <label>Patrimoine net (€) :</label>
+          <input type="number" id="inputPatrimoine" required>
+          <label>Loyers perçus (€) :</label>
+          <input type="number" id="inputLoyers" required>
+          <label>Investissements - Crypto (€) :</label>
+          <input type="number" id="inputCrypto">
+          <label>Investissements - Actions (€) :</label>
+          <input type="number" id="inputActions">
+          <label>Investissements - PEA (€) :</label>
+          <input type="number" id="inputPEA">
+          <button type="submit">Mettre à jour les graphiques</button>
+        </form>
+      </div>
     </div>
-    <div class="card">
-      <h2>Répartition des actifs</h2>
-      <canvas id="repartitionChart"></canvas>
+    <div id="tableaux" class="section">
+      <div class="card">
+        <h2>Tableau des Investissements</h2>
+        <table contenteditable="true">
+          <thead>
+            <tr><th>Mois</th><th>Crypto</th><th>Actions</th><th>PEA</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Jan</td><td>1000</td><td>2000</td><td>3000</td></tr>
+            <tr><td>Fév</td><td>1100</td><td>1900</td><td>3100</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </main>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     const mois = ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Aoû", "Sep", "Oct", "Nov", "Déc"];
-
-    function parseInput(id) {
-      return document.getElementById(id).value.split(',').map(v => parseFloat(v.trim()) || 0);
-    }
-
-    let patrimoineChart = new Chart(document.getElementById('patrimoineChart'), {
+    const patrimoineData = [20000, 21500, 22500, 23500, 25000, 26000, 27500, 28500, 29500, 30500, 32000, 33000];
+    const loyersData = Array(12).fill(750);
+    const patrimoineChart = new Chart(document.getElementById('chartPatrimoine'), {
       type: 'line',
-      data: {
-        labels: mois,
-        datasets: [{
-          label: 'Patrimoine Net (€)',
-          data: parseInput('patrimoineInput'),
-          borderColor: '#2980b9',
-          fill: false
-        }]
-      }
+      data: { labels: mois, datasets: [{ label: 'Patrimoine (€)', data: patrimoineData, borderColor: '#3b82f6', fill: false, tension: 0.4 }] }
     });
-
-    let loyersChart = new Chart(document.getElementById('loyersChart'), {
+    const loyersChart = new Chart(document.getElementById('chartLoyers'), {
       type: 'bar',
-      data: {
-        labels: mois,
-        datasets: [{
-          label: 'Loyers perçus (€)',
-          data: parseInput('loyersInput'),
-          backgroundColor: '#27ae60'
-        }]
-      }
+      data: { labels: mois, datasets: [{ label: 'Loyers (€)', data: loyersData, backgroundColor: '#10b981' }] }
     });
-
-    let repartitionChart = new Chart(document.getElementById('repartitionChart'), {
-      type: 'pie',
-      data: {
-        labels: ["Assurance-vie", "Actions", "Crypto", "RP", "Locatif"],
-        datasets: [{
-          label: 'Répartition des actifs',
-          data: parseInput('repartitionInput'),
-          backgroundColor: ['#f39c12', '#2980b9', '#8e44ad', '#16a085', '#c0392b']
-        }]
-      }
+    const investChart = new Chart(document.getElementById('chartInvest'), {
+      type: 'doughnut',
+      data: { labels: ["Crypto", "Actions", "PEA"], datasets: [{ label: 'Répartition', data: [0, 0, 0], backgroundColor: ['#f59e0b', '#6366f1', '#ec4899'] }] }
     });
-
-    function updateCharts() {
-      patrimoineChart.data.datasets[0].data = parseInput('patrimoineInput');
-      patrimoineChart.update();
-
-      loyersChart.data.datasets[0].data = parseInput('loyersInput');
-      loyersChart.update();
-
-      repartitionChart.data.datasets[0].data = parseInput('repartitionInput');
-      repartitionChart.update();
+    document.getElementById('formData').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const patrimoine = parseFloat(document.getElementById('inputPatrimoine').value);
+      const loyers = parseFloat(document.getElementById('inputLoyers').value);
+      const crypto = parseFloat(document.getElementById('inputCrypto').value) || 0;
+      const actions = parseFloat(document.getElementById('inputActions').value) || 0;
+      const pea = parseFloat(document.getElementById('inputPEA').value) || 0;
+      patrimoineData.push(patrimoine); patrimoineData.shift();
+      loyersData.push(loyers); loyersData.shift();
+      patrimoineChart.update(); loyersChart.update();
+      investChart.data.datasets[0].data = [crypto, actions, pea]; investChart.update();
+    });
+    function switchTab(id, btn) {
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      document.getElementById('themeBtn').textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
     }
   </script>
 </body>
