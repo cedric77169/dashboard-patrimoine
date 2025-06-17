@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tableau de bord patrimonial</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 1em;
+      text-align: center;
+    }
+    main {
+      padding: 2em;
+    }
+    .card, .form-section {
+      background: white;
+      border-radius: 8px;
+      padding: 1.5em;
+      margin-bottom: 2em;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    canvas {
+      max-width: 100%;
+    }
+    input {
+      margin: 0.5em 0;
+      width: 95%;
+    }
+    button {
+      margin-top: 1em;
+      padding: 0.5em 1em;
+      font-weight: bold;
+      background: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Tableau de bord patrimonial</h1>
+  </header>
+  <main>
+    <div class="form-section">
+      <h2>Mettre à jour les données</h2>
+      <label>Patrimoine Net (€) mensuel :</label><br>
+      <input type="text" id="patrimoineInput" value="20000,21000,22000,23500,24500,25500,26000,27000,28500,29500,30000,31000"><br>
+      <label>Loyers mensuels (€) :</label><br>
+      <input type="text" id="loyersInput" value="750,750,750,750,750,750,750,750,750,750,750,750"><br>
+      <label>Répartition actifs (€) : assurance-vie, actions, crypto, RP, locatif</label><br>
+      <input type="text" id="repartitionInput" value="10000,5000,1500,120000,90000"><br>
+      <button onclick="updateCharts()">Mettre à jour les graphiques</button>
+    </div>
+
+    <div class="card">
+      <h2>Évolution du patrimoine net</h2>
+      <canvas id="patrimoineChart"></canvas>
+    </div>
+    <div class="card">
+      <h2>Loyers mensuels</h2>
+      <canvas id="loyersChart"></canvas>
+    </div>
+    <div class="card">
+      <h2>Répartition des actifs</h2>
+      <canvas id="repartitionChart"></canvas>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const mois = ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Aoû", "Sep", "Oct", "Nov", "Déc"];
+
+    function parseInput(id) {
+      return document.getElementById(id).value.split(',').map(v => parseFloat(v.trim()) || 0);
+    }
+
+    let patrimoineChart = new Chart(document.getElementById('patrimoineChart'), {
+      type: 'line',
+      data: {
+        labels: mois,
+        datasets: [{
+          label: 'Patrimoine Net (€)',
+          data: parseInput('patrimoineInput'),
+          borderColor: '#2980b9',
+          fill: false
+        }]
+      }
+    });
+
+    let loyersChart = new Chart(document.getElementById('loyersChart'), {
+      type: 'bar',
+      data: {
+        labels: mois,
+        datasets: [{
+          label: 'Loyers perçus (€)',
+          data: parseInput('loyersInput'),
+          backgroundColor: '#27ae60'
+        }]
+      }
+    });
+
+    let repartitionChart = new Chart(document.getElementById('repartitionChart'), {
+      type: 'pie',
+      data: {
+        labels: ["Assurance-vie", "Actions", "Crypto", "RP", "Locatif"],
+        datasets: [{
+          label: 'Répartition des actifs',
+          data: parseInput('repartitionInput'),
+          backgroundColor: ['#f39c12', '#2980b9', '#8e44ad', '#16a085', '#c0392b']
+        }]
+      }
+    });
+
+    function updateCharts() {
+      patrimoineChart.data.datasets[0].data = parseInput('patrimoineInput');
+      patrimoineChart.update();
+
+      loyersChart.data.datasets[0].data = parseInput('loyersInput');
+      loyersChart.update();
+
+      repartitionChart.data.datasets[0].data = parseInput('repartitionInput');
+      repartitionChart.update();
+    }
+  </script>
+</body>
+</html>
