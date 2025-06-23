@@ -1,100 +1,133 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Patrimoine</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #1e293b;
+      padding: 2rem;
+    }
+    header {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .card h2 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .big {
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+    .positive { color: green; }
+    .negative { color: red; }
+    canvas { max-width: 100%; }
+    .tag {
+      background: #eef2ff;
+      color: #4f46e5;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
+      border-radius: 0.25rem;
+    }
+    nav {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    nav a {
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      background: #e0e7ff;
+      color: #1e3a8a;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <header>📊 Dashboard Patrimoine</header>
+  <nav>
+    <a href="#">Dashboard</a>
+    <a href="#">Crédits</a>
+    <a href="#">Investissements</a>
+    <a href="#">Portefeuille</a>
+  </nav>
 
-export default function DashboardPatrimoine() {
-  const [totalNet, setTotalNet] = useState(243000);
-  const [credits, setCredits] = useState([
-    { id: 1, nom: "Crédit Immo", capital: 180000, reste: 95000, mensualité: 860 },
-    { id: 2, nom: "Crédit Auto", capital: 20000, reste: 6000, mensualité: 320 },
-  ]);
-  const [investissements, setInvestissements] = useState([
-    { id: 1, type: "Bourse", montant: 18000 },
-    { id: 2, type: "Assurance-vie", montant: 35000 },
-    { id: 3, type: "Crypto", montant: 9000 },
-  ]);
-
-  return (
-    <div className="p-6 grid gap-6">
-      <h1 className="text-2xl font-bold">Dashboard de Gestion de Patrimoine</h1>
-
-      <Card>
-        <CardContent className="p-4">
-          <h2 className="text-xl font-semibold mb-2">Vue Globale</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
-              <p className="text-sm">Patrimoine Net</p>
-              <p className="text-lg font-bold">{totalNet.toLocaleString()} €</p>
-            </div>
-            <div>
-              <p className="text-sm">Total Crédits</p>
-              <p className="text-lg font-bold">
-                {credits.reduce((s, c) => s + c.reste, 0).toLocaleString()} €
-              </p>
-            </div>
-            <div>
-              <p className="text-sm">Investissements</p>
-              <p className="text-lg font-bold">
-                {investissements.reduce((s, i) => s + i.montant, 0).toLocaleString()} €
-              </p>
-            </div>
-            <div>
-              <p className="text-sm">Mensualités</p>
-              <p className="text-lg font-bold">
-                {credits.reduce((s, c) => s + c.mensualité, 0).toLocaleString()} € /mois
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Tabs defaultValue="credits">
-        <TabsList>
-          <TabsTrigger value="credits">Crédits</TabsTrigger>
-          <TabsTrigger value="investissements">Investissements</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="credits">
-          <div className="grid gap-4 mt-4">
-            {credits.map((credit) => (
-              <Card key={credit.id}>
-                <CardContent className="p-4">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="font-semibold">{credit.nom}</h3>
-                      <p className="text-sm text-gray-500">
-                        Capital restant : {credit.reste.toLocaleString()} €
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Mensualité : {credit.mensualité.toLocaleString()} €
-                      </p>
-                    </div>
-                    <Progress value={((credit.capital - credit.reste) / credit.capital) * 100} className="w-40" />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="investissements">
-          <div className="grid gap-4 mt-4">
-            {investissements.map((inv) => (
-              <Card key={inv.id}>
-                <CardContent className="p-4">
-                  <div className="flex justify-between items-center">
-                    <h3 className="font-semibold">{inv.type}</h3>
-                    <p className="font-bold">{inv.montant.toLocaleString()} €</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
+  <div class="grid">
+    <div class="card">
+      <h2>Patrimoine Net</h2>
+      <div class="big negative">-207 075,00 €</div>
+      <div class="tag">Position négative</div>
     </div>
-  );
-}
+    <div class="card">
+      <h2>Total Actifs</h2>
+      <div class="big">131 425,00 €</div>
+      <div class="positive">Performance : 11,38 %</div>
+    </div>
+    <div class="card">
+      <h2>Total Dettes</h2>
+      <div class="big">338 500,00 €</div>
+      <div>2 crédits actifs</div>
+    </div>
+    <div class="card">
+      <h2>Solde Mensuel</h2>
+      <div class="big">687,14 €</div>
+      <div class="positive">Capacité d'épargne</div>
+    </div>
+  </div>
+
+  <div class="grid" style="margin-top: 2rem;">
+    <div class="card">
+      <h2>Répartition du Patrimoine</h2>
+      <canvas id="chartPatrimoine"></canvas>
+    </div>
+    <div class="card">
+      <h2>Résumé Financier</h2>
+      <ul style="list-style: none;">
+        <li><strong>Revenus mensuels :</strong> 5 800,00 €</li>
+        <li><strong>Charges mensuelles :</strong> 3 200,00 €</li>
+        <li><strong>Mensualités crédits :</strong> 1 912,86 €</li>
+        <li><strong>Assurances crédits :</strong> 87,92 €/mois</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 2rem;">
+    <h2>Alertes et Notifications</h2>
+    <p>✅ Excellente performance de votre portefeuille : 11,38 %</p>
+  </div>
+
+  <script>
+    const ctx = document.getElementById('chartPatrimoine').getContext('2d');
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Assurance-vie', 'Bourse', 'Cryptomonnaies', 'Liquidités'],
+        datasets: [{
+          data: [36.7, 21.9, 14.2, 27.3],
+          backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#6b7280']
+        }]
+      }
+    });
+  </script>
+</body>
+</html>
