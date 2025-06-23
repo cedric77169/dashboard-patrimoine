@@ -1,130 +1,100 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Simulation Crédit Immobilier</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #121212;
-      color: #f1f1f1;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #1e1e1e;
-      padding: 1rem;
-      text-align: center;
-      border-bottom: 1px solid #444;
-    }
-    nav {
-      display: flex;
-      justify-content: center;
-      background-color: #222;
-      border-bottom: 1px solid #444;
-    }
-    nav button {
-      background: none;
-      color: #f1f1f1;
-      border: none;
-      padding: 1rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    nav button:hover {
-      background-color: #333;
-    }
-    section {
-      display: none;
-      padding: 2rem;
-    }
-    section.active {
-      display: block;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    th, td {
-      border: 1px solid #555;
-      padding: 0.5rem;
-      text-align: center;
-    }
-    th {
-      background-color: #333;
-    }
-    .formulaire {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    .formulaire input, .formulaire select {
-      padding: 0.5rem;
-      background-color: #1e1e1e;
-      color: white;
-      border: 1px solid #555;
-      flex: 1 1 200px;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>Suivi du Crédit Immobilier</h1>
-  </header>
-  <nav>
-    <button onclick="showTab('synthese')">Synthèse</button>
-    <button onclick="showTab('echeancier')">Échéancier</button>
-    <button onclick="showTab('ajout')">Ajouter données</button>
-  </nav>
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
-  <section id="synthese" class="active">
-    <h2>Résumé du crédit</h2>
-    <p>Montant du crédit : 255 906 €</p>
-    <p>Taux d'intérêt : 3.5%</p>
-    <p>Durée approximative : 17 ans</p>
-    <p>Mensualité moyenne : 1 799 €</p>
-  </section>
+export default function DashboardPatrimoine() {
+  const [totalNet, setTotalNet] = useState(243000);
+  const [credits, setCredits] = useState([
+    { id: 1, nom: "Crédit Immo", capital: 180000, reste: 95000, mensualité: 860 },
+    { id: 2, nom: "Crédit Auto", capital: 20000, reste: 6000, mensualité: 320 },
+  ]);
+  const [investissements, setInvestissements] = useState([
+    { id: 1, type: "Bourse", montant: 18000 },
+    { id: 2, type: "Assurance-vie", montant: 35000 },
+    { id: 3, type: "Crypto", montant: 9000 },
+  ]);
 
-  <section id="echeancier">
-    <h2>Échéancier Simplifié</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Mois</th>
-          <th>Capital restant dû</th>
-          <th>Intérêt</th>
-          <th>Assurance</th>
-          <th>Mensualité</th>
-        </tr>
-      </thead>
-      <tbody id="schedule-body">
-        <!-- Données simplifiées -->
-        <tr><td>05/07/2025</td><td>253138 €</td><td>738 €</td><td>112 €</td><td>1 779 €</td></tr>
-        <tr><td>05/08/2025</td><td>252210 €</td><td>735 €</td><td>112 €</td><td>1 779 €</td></tr>
-        <tr><td>05/09/2025</td><td>251280 €</td><td>732 €</td><td>112 €</td><td>1 779 €</td></tr>
-        <!-- ... Ajouter les autres échéances -->
-      </tbody>
-    </table>
-  </section>
+  return (
+    <div className="p-6 grid gap-6">
+      <h1 className="text-2xl font-bold">Dashboard de Gestion de Patrimoine</h1>
 
-  <section id="ajout">
-    <h2>Ajouter un investissement</h2>
-    <div class="formulaire">
-      <input type="text" placeholder="Type d'investissement (crypto, bourse...)" />
-      <input type="number" placeholder="Montant" />
-      <input type="month" placeholder="Mois" />
-      <button onclick="alert('Fonction à implémenter')">Ajouter</button>
+      <Card>
+        <CardContent className="p-4">
+          <h2 className="text-xl font-semibold mb-2">Vue Globale</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+              <p className="text-sm">Patrimoine Net</p>
+              <p className="text-lg font-bold">{totalNet.toLocaleString()} €</p>
+            </div>
+            <div>
+              <p className="text-sm">Total Crédits</p>
+              <p className="text-lg font-bold">
+                {credits.reduce((s, c) => s + c.reste, 0).toLocaleString()} €
+              </p>
+            </div>
+            <div>
+              <p className="text-sm">Investissements</p>
+              <p className="text-lg font-bold">
+                {investissements.reduce((s, i) => s + i.montant, 0).toLocaleString()} €
+              </p>
+            </div>
+            <div>
+              <p className="text-sm">Mensualités</p>
+              <p className="text-lg font-bold">
+                {credits.reduce((s, c) => s + c.mensualité, 0).toLocaleString()} € /mois
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Tabs defaultValue="credits">
+        <TabsList>
+          <TabsTrigger value="credits">Crédits</TabsTrigger>
+          <TabsTrigger value="investissements">Investissements</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="credits">
+          <div className="grid gap-4 mt-4">
+            {credits.map((credit) => (
+              <Card key={credit.id}>
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h3 className="font-semibold">{credit.nom}</h3>
+                      <p className="text-sm text-gray-500">
+                        Capital restant : {credit.reste.toLocaleString()} €
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Mensualité : {credit.mensualité.toLocaleString()} €
+                      </p>
+                    </div>
+                    <Progress value={((credit.capital - credit.reste) / credit.capital) * 100} className="w-40" />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="investissements">
+          <div className="grid gap-4 mt-4">
+            {investissements.map((inv) => (
+              <Card key={inv.id}>
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-semibold">{inv.type}</h3>
+                    <p className="font-bold">{inv.montant.toLocaleString()} €</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
-  </section>
-
-  <script>
-    function showTab(id) {
-      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    }
-  </script>
-</body>
-</html>
+  );
+}
