@@ -1,189 +1,130 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>Dashboard Patrimoine Complet</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <title>Simulation Crédit Immobilier</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #f1f1f1;
       margin: 0;
-      background: #0f172a;
-      color: #f8fafc;
+      padding: 0;
     }
     header {
-      background: #1e293b;
-      padding: 1em;
+      background-color: #1e1e1e;
+      padding: 1rem;
       text-align: center;
-      font-size: 1.5em;
-      font-weight: bold;
+      border-bottom: 1px solid #444;
     }
-    main {
-      max-width: 1200px;
-      margin: auto;
-      padding: 2em;
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #222;
+      border-bottom: 1px solid #444;
     }
-    .section {
-      background: #1e293b;
-      padding: 1.5em;
-      border-radius: 8px;
-      margin-bottom: 2em;
+    nav button {
+      background: none;
+      color: #f1f1f1;
+      border: none;
+      padding: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
     }
-    h2 {
-      margin-top: 0;
-      color: #93c5fd;
+    nav button:hover {
+      background-color: #333;
+    }
+    section {
+      display: none;
+      padding: 2rem;
+    }
+    section.active {
+      display: block;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 1em;
-      background: #f8fafc;
-      color: #0f172a;
+      margin-top: 1rem;
     }
     th, td {
-      border: 1px solid #0f172a;
-      padding: 0.5em;
-      text-align: left;
+      border: 1px solid #555;
+      padding: 0.5rem;
+      text-align: center;
     }
     th {
-      background: #e2e8f0;
+      background-color: #333;
     }
-    td[contenteditable] {
-      background-color: #fff;
+    .formulaire {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
     }
-    canvas {
-      background-color: #fff;
-      border-radius: 8px;
-      margin-top: 1em;
-      max-width: 100%;
+    .formulaire input, .formulaire select {
+      padding: 0.5rem;
+      background-color: #1e1e1e;
+      color: white;
+      border: 1px solid #555;
+      flex: 1 1 200px;
     }
   </style>
 </head>
 <body>
-  <header>📊 Dashboard Patrimonial Complet</header>
-  <main>
+  <header>
+    <h1>Suivi du Crédit Immobilier</h1>
+  </header>
+  <nav>
+    <button onclick="showTab('synthese')">Synthèse</button>
+    <button onclick="showTab('echeancier')">Échéancier</button>
+    <button onclick="showTab('ajout')">Ajouter données</button>
+  </nav>
 
-    <div class="section">
-      <h2>Évolution du patrimoine net</h2>
-      <canvas id="chartPatrimoine"></canvas>
-    </div>
+  <section id="synthese" class="active">
+    <h2>Résumé du crédit</h2>
+    <p>Montant du crédit : 255 906 €</p>
+    <p>Taux d'intérêt : 3.5%</p>
+    <p>Durée approximative : 17 ans</p>
+    <p>Mensualité moyenne : 1 799 €</p>
+  </section>
 
-    <div class="section">
-      <h2>Loyers mensuels</h2>
-      <canvas id="chartLoyers"></canvas>
-    </div>
+  <section id="echeancier">
+    <h2>Échéancier Simplifié</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Mois</th>
+          <th>Capital restant dû</th>
+          <th>Intérêt</th>
+          <th>Assurance</th>
+          <th>Mensualité</th>
+        </tr>
+      </thead>
+      <tbody id="schedule-body">
+        <!-- Données simplifiées -->
+        <tr><td>05/07/2025</td><td>253138 €</td><td>738 €</td><td>112 €</td><td>1 779 €</td></tr>
+        <tr><td>05/08/2025</td><td>252210 €</td><td>735 €</td><td>112 €</td><td>1 779 €</td></tr>
+        <tr><td>05/09/2025</td><td>251280 €</td><td>732 €</td><td>112 €</td><td>1 779 €</td></tr>
+        <!-- ... Ajouter les autres échéances -->
+      </tbody>
+    </table>
+  </section>
 
-    <div class="section">
-      <h2>Répartition des investissements</h2>
-      <canvas id="chartInvestissements"></canvas>
+  <section id="ajout">
+    <h2>Ajouter un investissement</h2>
+    <div class="formulaire">
+      <input type="text" placeholder="Type d'investissement (crypto, bourse...)" />
+      <input type="number" placeholder="Montant" />
+      <input type="month" placeholder="Mois" />
+      <button onclick="alert('Fonction à implémenter')">Ajouter</button>
     </div>
-
-    <div class="section">
-      <h2>Évolution mensuelle du patrimoine</h2>
-      <table contenteditable="true">
-        <thead>
-          <tr>
-            <th>Mois</th>
-            <th>Assurance-vie (€)</th>
-            <th>Actions (€)</th>
-            <th>Cryptomonnaies (€)</th>
-            <th>Immobilier locatif (€)</th>
-            <th>Résidence principale (€)</th>
-            <th>Crédits immo restants (€)</th>
-            <th>Patrimoine brut (€)</th>
-            <th>Total dettes (€)</th>
-            <th>Patrimoine net (€)</th>
-          </tr>
-        </thead>
-        <tbody id="patrimoineTable">
-          <tr><td>Janvier</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-          <tr><td>Février</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-          <tr><td>Mars</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-          <tr><td>Avril</td><td>1000</td><td>0</td><td>0</td><td>255000</td><td>5000</td><td>255000</td><td>261000</td><td>255000</td><td>6000</td></tr>
-          <tr><td>Mai</td><td>2000</td><td>0</td><td>0</td><td>255000</td><td>0</td><td>255000</td><td>257000</td><td>255000</td><td>2000</td></tr>
-          <tr><td>Juin</td><td>3000</td><td>0</td><td>0</td><td>255000</td><td>0</td><td>255000</td><td>258000</td><td>255000</td><td>3000</td></tr>
-          <tr><td>Juillet</td><td>0</td><td>0</td><td>0</td><td>255000</td><td>0</td><td>255000</td><td>255000</td><td>255000</td><td>0</td></tr>
-          <tr><td>Août</td><td>0</td><td>0</td><td>0</td><td>255000</td><td>0</td><td>255000</td><td>255000</td><td>255000</td><td>0</td></tr>
-          <tr><td>Septembre</td><td>0</td><td>0</td><td>0</td><td>255000</td><td>0</td><td>255000</td><td>255000</td><td>255000</td><td>0</td></tr>
-          <tr><td>Octobre</td><td>0</td><td>0</td><td>0</td><td>255000</td><td>0</td><td>255000</td><td>255000</td><td>255000</td><td>0</td></tr>
-          <tr><td>Novembre</td><td>0</td><td>0</td><td>0</td><td>255000</td><td>0</td><td>255000</td><td>255000</td><td>255000</td><td>0</td></tr>
-          <tr><td>Décembre</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="section">
-      <h2>Tableau des crédits</h2>
-      <table contenteditable="true">
-        <thead>
-          <tr><th>Nom du crédit</th><th>Montant restant (€)</th><th>Taux d’intérêt (%)</th><th>Mensualité (€)</th><th>Échéance (mois)</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Crédit Immo Résidence</td><td>50000</td><td>1.5</td><td></td><td>60</td></tr>
-          <tr><td>Crédit Immo Locatif</td><td>255000</td><td>2.2</td><td>1800</td><td>204</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="section">
-      <h2>Analyse financière</h2>
-      <table contenteditable="true">
-        <thead>
-          <tr><th>Indicateur</th><th>Valeur (%)</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Rendement locatif brut</td><td></td></tr>
-          <tr><td>Rendement locatif net estimé</td><td>0</td></tr>
-          <tr><td>Taux d’endettement estimé</td><td></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </main>
+  </section>
 
   <script>
-    const patrimoineNetData = [0, 0, 0, 6000, 2000, 3000, 0, 0, 0, 0, 0, 0];
-    const loyersMensuelsData = Array(12).fill(750);
-    const repartitionData = [10000, 5000, 1500]; // Crypto, Actions, PEA
-
-    new Chart(document.getElementById('chartPatrimoine'), {
-      type: 'line',
-      data: {
-        labels: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"],
-        datasets: [{
-          label: 'Patrimoine net (€)',
-          data: patrimoineNetData,
-          borderColor: '#3b82f6',
-          backgroundColor: '#3b82f6',
-          tension: 0.3
-        }]
-      }
-    });
-
-    new Chart(document.getElementById('chartLoyers'), {
-      type: 'bar',
-      data: {
-        labels: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"],
-        datasets: [{
-          label: 'Loyers perçus (€)',
-          data: loyersMensuelsData,
-          backgroundColor: '#10b981'
-        }]
-      }
-    });
-
-    new Chart(document.getElementById('chartInvestissements'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Crypto', 'Actions', 'PEA'],
-        datasets: [{
-          label: 'Répartition',
-          data: repartitionData,
-          backgroundColor: ['#f59e0b', '#6366f1', '#ec4899']
-        }]
-      }
-    });
+    function showTab(id) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
   </script>
 </body>
 </html>
